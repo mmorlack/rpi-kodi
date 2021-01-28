@@ -18,20 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM ubuntu:bionic
-
-ARG KODI_VERSION=18.9
+FROM balenalib/rpi-raspbian:buster-20201118
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install the team-xbmc ppa
 RUN apt-get update                                                        && \
-    apt-get install -y --no-install-recommends software-properties-common && \
-    add-apt-repository ppa:team-xbmc/ppa                                  && \
-    apt-get -y purge openssl software-properties-common                   && \
+    apt-get -y purge openssl                                              && \
     apt-get -y --purge autoremove                                         && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get dist-upgrade                                                  && \
+# Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
+# either install udev or make the required directory 
+    sudo apt-get install uuid-dev                                         && \
+#    mkdir -p /etc/udev/rules.d
+    rm -rf /var/lib/apt/lists/*                                           
 
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
@@ -46,31 +47,13 @@ RUN apt-get update                                                        && \
 #  - pulseaudio                   in case the user prefers PulseAudio instead of ALSA
 #  - tzdata                       necessary for timezone selection
 RUN packages="                                               \
-                                                             \
+    fbset                                                         \
     ca-certificates                                          \
-    kodi=2:${KODI_VERSION}+*                                 \
+    kodi                                                     \
     kodi-eventclients-kodi-send                              \
-    kodi-game-libretro                                       \
-    kodi-game-libretro-beetle-pce-fast                       \
-    kodi-game-libretro-beetle-vb                             \
-    kodi-game-libretro-beetle-wswan                          \
-    kodi-game-libretro-bsnes-mercury-accuracy                \
-    kodi-game-libretro-bsnes-mercury-balanced                \
-    kodi-game-libretro-bsnes-mercury-performance             \
-    kodi-game-libretro-desmume                               \
-    kodi-game-libretro-fbalpha                               \
-    kodi-game-libretro-fbalpha2012                           \
-    kodi-game-libretro-fuse                                  \
-    kodi-game-libretro-gambatte                              \
-    kodi-game-libretro-prboom                                \
-    kodi-game-libretro-stella                                \
-    kodi-game-libretro-tgbdual                               \
-    kodi-game-libretro-vba-next                              \
-    kodi-game-libretro-virtualjaguar                         \
     kodi-inputstream-adaptive                                \
     kodi-inputstream-rtmp                                    \
     kodi-peripheral-joystick                                 \
-    kodi-peripheral-xarcade                                  \
     kodi-pvr-argustv                                         \
     kodi-pvr-dvblink                                         \
     kodi-pvr-dvbviewer                                       \
@@ -82,7 +65,6 @@ RUN packages="                                               \
     kodi-pvr-mythtv                                          \
     kodi-pvr-nextpvr                                         \
     kodi-pvr-njoy                                            \
-    kodi-pvr-octonet                                         \
     kodi-pvr-pctv                                            \
     kodi-pvr-sledovanitv-cz                                  \
     kodi-pvr-stalker                                         \
@@ -92,13 +74,8 @@ RUN packages="                                               \
     kodi-pvr-vuplus                                          \
     kodi-pvr-wmc                                             \
     kodi-pvr-zattoo                                          \
-    kodi-screensaver-asteroids                               \
-    kodi-screensaver-asterwave                               \
     kodi-screensaver-biogenesis                              \
-    kodi-screensaver-cpblobs                                 \
-    kodi-screensaver-greynetic                               \
     kodi-screensaver-matrixtrails                            \
-    kodi-screensaver-pingpong                                \
     kodi-screensaver-pyro                                    \
     kodi-screensaver-stars                                   \
     locales                                                  \
@@ -107,9 +84,20 @@ RUN packages="                                               \
     tzdata"                                               && \
                                                              \
     apt-get update                                        && \
-    apt-get install -y --no-install-recommends $packages  && \
-    apt-get -y --purge autoremove                         && \
+    apt-get install -y $packages                          
+
+# Add python for netflix plugin
+RUN sudo apt-get install python-pip python-crypto build-essential python-all-dev                   \
+                         python-setuptools python-wheel python-crypto-dbg                          \
+                         python-crypto-doc python-pip-whl                                       && \
+    pip install pycryptodomex                                                                   && \
+    ln -s /usr/lib/python2.7/dist-packages/Crypto /usr/lib/python2.7/dist-packages/Cryptodome   && \
+    apt-get -y --purge autoremove                                                               && \
     rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi && usermod -a -G video kodi
+
+ADD /asound.conf /etc/asound.conf
 
 # setup entry point
 COPY entrypoint.sh /usr/local/bin
