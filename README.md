@@ -1,15 +1,14 @@
-# erichough/kodi
+# rimago/rpi-kodi
 
-Dockerized [Kodi](https://kodi.tv/) with audio and video.
+Dockerized [Kodi](https://kodi.tv/) with audio and video for the raspberry pi4.
 
 ![Kodi screenshot](https://kodi.tv/sites/default/files/page/field_image/about--devices.jpg "Kodi screenshot")
 
 ## Features
 
 * fully-functional [Kodi](https://kodi.tv/) installation in a [Docker](https://www.docker.com/) container
-* **audio** ([ALSA or PulseAudio](https://kodi.wiki/view/Linux_audio)) and **video** (with optional OpenGL hardware 
-  video acceleration) via [x11docker](https://github.com/mviereck/x11docker/)
-* simple, Ubuntu-based image that adheres to the [official Kodi installation instructions](https://kodi.wiki/view/HOW-TO:Install_Kodi_for_Linux#Installing_Kodi_on_Ubuntu-based_distributions)
+* **audio** ([ALSA or PulseAudio](https://kodi.wiki/view/Linux_audio)) and **video**
+* simple, Raspbian image that adheres to the [official Kodi installation instructions](https://kodi.wiki/view/HOW-TO:Install_Kodi_for_Linux#Installing_Kodi_on_Ubuntu-based_distributions)
 * clean shutdown of Kodi when its container is terminated
 
 ## Host Prerequisites
@@ -20,75 +19,38 @@ The host system will need the following:
 
    This image should work on any Linux distribution with a functional Docker installation.
    
-1. **A connected display and speaker(s)**
-
-   If you're looking for a headless Kodi installation, look elsewhere!
-
-1. **[X](https://www.x.org/) or [Wayland](https://wayland.freedesktop.org/)**
-
-   Ensure that the packages for an X or Wayland server are present on the Docker host. Please consult your distribution's 
-   documentation if you're not sure what to install. A display server does *not* need to be running ahead of time.
-
-1. **[x11docker](https://github.com/mviereck/x11docker/)**
-
-   `x11docker` allows Docker-based applications to utilize X and/or Wayland on the host. Please follow the `x11docker` 
-   [installation instructions](https://github.com/mviereck/x11docker#installation) and ensure that you have a 
-   [working setup](https://github.com/mviereck/x11docker#examples) on the Docker host.
+2. **A connected display and speaker(s)**
        
 ## Usage
+* Create file docker-compose.yml
 
-### Starting Kodi
-
-Use `x11docker` to start the `erichough/kodi` Docker image. Detailing the myriad of `x11docker` options is beyond the 
-scope of this document; please consult the [`x11docker` documentation](https://github.com/mviereck/x11docker/) to find 
-the set of options that work for your setup.
-
-Below is an example command (split into multiple lines for clarity) that starts Kodi with a fresh X.Org X server with
-PulseAudio sound, hardware video acceleration, a persistent Kodi home directory, and a shared read-only Docker mount for
-media files:
-
-    $ x11docker --xorg                                 \
-                --pulseaudio                           \
-                --gpu                                  \
-                --homedir /host/path/to/kodi/home      \
-                -- -v /host/path/to/media:/media:ro -- \
-                erichough/kodi
-           
-Note that the optional argument passed between a pair of `--` defines additional arguments to be passed to `docker run`.
-
-### Stopping Kodi
-
-You can shut down Kodi just as you normally would; i.e. by using the power menu from the Kodi home screen. 
-Behind the scenes, the Docker container and `x11docker` processes will terminate cleanly.
-
-You can also [terminate the container from the command line](doc/advanced.md#command-line-shutdown).
-
-### Example systemd Service Unit
-
-    [Unit]
-    Description=Dockerized Kodi
-    Requires=docker.service
-    After=network.target docker.service
-    
-    [Service]
-    ExecStartPre=/usr/bin/docker pull erichough/kodi
-    ExecStart=/usr/bin/x11docker ... erichough/kodi
-    Restart=always
-    KillMode=process
-    
-    [Install]
-    WantedBy=multi-user.target
-
-## Advanced
-
-The [advanced topics](doc/advanced.md) documentation describes a few more useful features and functionality:
-
- * [Image Variants](doc/advanced.md#image-variants)
- * [Custom Startup Behavior](doc/advanced.md#custom-startup-behavior)
- * [Command-Line Shutdown](doc/advanced.md#command-line-shutdown)
+```yml
+version: "3.7"
+services:
+  rpi-kodi:
+    image: rimago/rpi-kodi
+    container_name: "kodi"
+    user: kodi
+    network_mode: host
+    restart: always
+    privileged: true
+    devices:
+      - /dev/fb0:/dev/fb0
+      - /dev/vchiq:/dev/vchiq
+    volumes:
+      - /home/pi/kodi/home:/home/kodi
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    tmpfs:
+      - /tmp
+    environment:
+      - PULSE_SERVER=127.0.0.1
+```
+WARNING: it requires the --privileged flag which is risky. Please let me know if you have an idea how to remove it.
 
 ## Contributing
+This docker project is based on [erichough/kodi](https://github.com/ehough/docker-kodi).
 
 Constructive criticism and contributions are welcome! Please 
-[submit an issue](https://github.com/ehough/docker-kodi/issues/new) or 
-[pull request](https://github.com/ehough/docker-kodi/compare).
+[submit an issue](https://github.com/rimago/rpi-kodi/issues/new) or 
+[pull request](https://github.com/rimago/rpi-kodi/compare).
