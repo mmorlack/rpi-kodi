@@ -48,6 +48,13 @@ services:
 ```
 WARNING: it requires the --privileged flag which is risky. Please let me know if you have an idea how to remove it.
 
+ * If you want to have the home directory outside of the container (e.g. /home/pi/kodi/home:/home/kodi) you need to add the following user to the host:
+
+```
+   groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi
+```
+   and make sure this user is the owner of the home directory.
+   
 ## Contributing
 This docker project is based on [erichough/kodi](https://github.com/ehough/docker-kodi).
 
