@@ -53,8 +53,36 @@ WARNING: it requires the --privileged flag which is risky. Please let me know if
 ```
    groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi
 ```
-   and make sure this user is the owner of the home directory.
+   and make sure this user is the owner of the home directory:
+```
+   chown -R kodi:kodi /home/pi/kodi/home
+```
    
+## Kodi-Control
+### Kore-App
+I am using the Kore-App for Remote-Control:
+ * [Android](https://play.google.com/store/apps/details?id=org.xbmc.kore&hl=de&gl=US)
+ * [iOS](https://apps.apple.com/de/app/official-kodi-remote/id520480364)
+
+To enable it, you have to enable the Kodi webserver by creating the file 
+`/home/pi/kodi/home/.kodi/userdata/advancedsettings.xml` 
+with the following content:
+```xml
+<advancedsettings>
+    <services>
+        <esallinterfaces>true</esallinterfaces>
+        <webserver>true</webserver>
+        <zeroconf>true</zeroconf>
+    </services>
+</advancedsettings>
+```
+
+### Local Control
+The current configuration does not allow access on keyboard or mouse.
+If you want to use them you probably have to mount these devices in the container.
+Please let me know if you have figured out how that works.
+I am happy to add this to the Readme here.
+
 ## Contributing
 This docker project is based on [erichough/kodi](https://github.com/ehough/docker-kodi).
 
