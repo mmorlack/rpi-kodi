@@ -83,6 +83,19 @@ If you want to use them you probably have to mount these devices in the containe
 Please let me know if you have figured out how that works.
 I am happy to add this to the Readme here.
 
+### IR Remotes
+In order to use IR remotes, add this device to your docker file:
+
+```yml
+      - /dev/lirc0:/dev/lirc0
+```
+
+Then once the container is created, you have to manually launch lircd in the container:
+
+```sh
+docker-compose exec  -u root kodi lircd
+```
+
 ## Contributing
 This docker project is based on [erichough/kodi](https://github.com/ehough/docker-kodi).
 

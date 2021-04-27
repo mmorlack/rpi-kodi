@@ -43,6 +43,7 @@ RUN apt-get update                                                        && \
 #  - kodi-peripheral-*            enables the use of gamepads, joysticks, game controllers, etc.
 #  - kodi-pvr-*                   PVR add-ons
 #  - kodi-screensaver-*           additional screensavers
+#  - lirc,lirc-compat-remotes     enables the use of IR Remotes
 #  - locales                      additional spoken language support (via x11docker --lang option)
 #  - pulseaudio                   in case the user prefers PulseAudio instead of ALSA
 #  - tzdata                       necessary for timezone selection
@@ -78,6 +79,8 @@ RUN packages="                                               \
     kodi-screensaver-matrixtrails                            \
     kodi-screensaver-pyro                                    \
     kodi-screensaver-stars                                   \
+    lirc                                                     \
+    lirc-compat-remotes                                      \
     locales                                                  \
     pulseaudio                                               \
     libnss3                                                  \
