@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM balenalib/rpi-raspbian:buster-20201118
+FROM balenalib/rpi-raspbian:buster-20210521
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -97,6 +97,13 @@ RUN sudo apt-get install python-pip python-crypto build-essential python-all-dev
     ln -s /usr/lib/python2.7/dist-packages/Crypto /usr/lib/python2.7/dist-packages/Cryptodome   && \
     apt-get -y --purge autoremove                                                               && \
     rm -rf /var/lib/apt/lists/*
+
+# Use patched glibc that widevine is working
+ADD /wagnerch-buster-ppa.key /tmp/wagnerch-buster-ppa.key
+ADD /wagnerch-buster-ppa.list /etc/apt/sources.list.d/wagnerch-buster-ppa.list
+RUN apt-key add /tmp/wagnerch-buster-ppa.key && \
+    apt-get update                           && \
+    apt-get install --only-upgrade libc6
 
 RUN groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi && usermod -a -G video kodi
 
