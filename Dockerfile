@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM balenalib/rpi-raspbian:buster-20210521
+FROM balenalib/rpi-raspbian:bullseye-20221125
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -50,6 +50,7 @@ RUN apt-get update                                                        && \
 RUN packages="                                               \
     fbset                                                         \
     ca-certificates                                          \
+    mesa-*                                                   \
     kodi                                                     \
     kodi-eventclients-kodi-send                              \
     kodi-inputstream-adaptive                                \
@@ -90,20 +91,12 @@ RUN packages="                                               \
     apt-get install -y $packages                          
 
 # Add python for netflix plugin
-RUN sudo apt-get install python-pip python-crypto build-essential python-all-dev                   \
-                         python-setuptools python-wheel python-crypto-dbg                          \
-                         python-crypto-doc python-pip-whl                                       && \
-    pip install pycryptodomex                                                                   && \
-    ln -s /usr/lib/python2.7/dist-packages/Crypto /usr/lib/python2.7/dist-packages/Cryptodome   && \
-    apt-get -y --purge autoremove                                                               && \
+RUN sudo apt-get install python3-pip python3-crypto build-essential python3-all-dev            \
+                         python3-setuptools python3-wheel python3-crypto-dbg                && \
+    pip install pycryptodomex                                                               && \
+    ln -s /usr/lib/python3/dist-packages/Crypto /usr/lib/python3/dist-packages/Cryptodome   && \
+    apt-get -y --purge autoremove                                                           && \
     rm -rf /var/lib/apt/lists/*
-
-# Use patched glibc that widevine is working
-ADD /wagnerch-buster-ppa.key /tmp/wagnerch-buster-ppa.key
-ADD /wagnerch-buster-ppa.list /etc/apt/sources.list.d/wagnerch-buster-ppa.list
-RUN apt-key add /tmp/wagnerch-buster-ppa.key && \
-    apt-get update                           && \
-    apt-get install --only-upgrade libc6
 
 RUN groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi && usermod -a -G video kodi
 
