@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM balenalib/rpi-raspbian:bullseye-20221125
+FROM balenalib/rpi-raspbian:bookworm
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -77,9 +77,7 @@ RUN packages="                                               \
     kodi-pvr-wmc                                             \
     kodi-pvr-zattoo                                          \
     kodi-screensaver-biogenesis                              \
-    kodi-screensaver-matrixtrails                            \
     kodi-screensaver-pyro                                    \
-    kodi-screensaver-stars                                   \
     lirc                                                     \
     lirc-compat-remotes                                      \
     locales                                                  \
@@ -91,9 +89,9 @@ RUN packages="                                               \
     apt-get install -y $packages                          
 
 # Add python for netflix plugin
-RUN sudo apt-get install python3-pip python3-crypto build-essential python3-all-dev            \
-                         python3-setuptools python3-wheel python3-crypto-dbg                && \
-    pip install pycryptodomex                                                               && \
+RUN sudo apt-get install python3-pip python3-cryptography build-essential python3-all-dev            \
+                         python3-setuptools python3-wheel                && \
+    pip install --break-system-packages pycryptodomex                                                               && \
     ln -s /usr/lib/python3/dist-packages/Crypto /usr/lib/python3/dist-packages/Cryptodome   && \
     apt-get -y --purge autoremove                                                           && \
     rm -rf /var/lib/apt/lists/*
