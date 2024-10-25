@@ -35,6 +35,8 @@ RUN apt-get update                                                        && \
 #    mkdir -p /etc/udev/rules.d
 #    rm -rf /var/lib/apt/lists/*                                           
 
+COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
+
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
 #  - kodi-eventclients-kodi-send  allows us to shut down Kodi gracefully upon container termination

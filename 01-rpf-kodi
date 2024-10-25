@@ -1,0 +1,3 @@
+Package: kodi*
+Pin: release o=Raspberry Pi Foundation
+Pin-Priority: 900
