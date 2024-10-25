@@ -30,9 +30,10 @@ RUN apt-get update                                                        && \
     apt-get dist-upgrade                                                  && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
-    sudo apt-get install uuid-dev                                         && \
+    sudo apt-get install uuid-dev                                         
+#    && \
 #    mkdir -p /etc/udev/rules.d
-    rm -rf /var/lib/apt/lists/*                                           
+#    rm -rf /var/lib/apt/lists/*                                           
 
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
