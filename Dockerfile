@@ -30,7 +30,7 @@ RUN apt-get update                                                        && \
     apt-get -y dist-upgrade                                               && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
-    sudo apt-get install uuid-dev                                         
+    apt-get install uuid-dev                                         
 #    && \
 #    mkdir -p /etc/udev/rules.d
 #    rm -rf /var/lib/apt/lists/*                                           
