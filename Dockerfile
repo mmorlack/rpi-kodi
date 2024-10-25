@@ -31,8 +31,8 @@ RUN apt-get update                                                        && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
     apt-get install uuid-dev                                         
-#    && \
-#    mkdir -p /etc/udev/rules.d
+    && \
+    mkdir -p /etc/udev/rules.d
 #    rm -rf /var/lib/apt/lists/*                                           
 
 # COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
