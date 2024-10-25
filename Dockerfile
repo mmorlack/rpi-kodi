@@ -24,20 +24,18 @@ FROM dtcooper/raspberrypi-os:python
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install the team-xbmc ppa
-#RUN apt-get update                                                        && \
-#    apt-get -y purge openssl                                              && \
-#    apt-get -y --purge autoremove                                         && \
-#    apt-get -y dist-upgrade                                               && \
+RUN apt-get update                                                        && \
+   apt-get -y purge openssl                                              && \
+   apt-get -y --purge autoremove                                         && \
+   apt-get -y dist-upgrade                                               && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
-#    apt-get install uuid-dev                                              && \
-#    mkdir -p /etc/udev/rules.d
-#    rm -rf /var/lib/apt/lists/*                                           
+   apt-get install uuid-dev                                              && \
+   mkdir -p /etc/udev/rules.d                                           && \
+   rm -rf /var/lib/apt/lists/*                                           
 
 COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
 
-# FIX for Kodi post install -> see https://github.com/MichaIng/DietPi/issues/6703
-RUN mkdir -p /etc/polkit-1/localauthority/50-local.d
 
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
@@ -55,7 +53,7 @@ RUN mkdir -p /etc/polkit-1/localauthority/50-local.d
 RUN packages="                                               \
     fbset                                                    \
     ca-certificates                                          \
-    mesa-*                                                   \
+    # mesa-*                                                   \
     kodi                                                     \
     kodi-inputstream-adaptive                                \
     kodi-inputstream-rtmp                                    \
