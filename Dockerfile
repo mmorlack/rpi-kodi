@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM balenalib/rpi-raspbian:bookworm
+FROM dtcooper/raspberrypi-os:python
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -89,12 +89,12 @@ RUN packages="                                               \
     apt-get install -y $packages                          
 
 # Add python for netflix plugin
-RUN sudo apt-get install python3-pip python3-cryptography build-essential python3-all-dev            \
-                         python3-setuptools python3-wheel                && \
-    pip install --break-system-packages pycryptodomex                                                               && \
-    ln -s /usr/lib/python3/dist-packages/Crypto /usr/lib/python3/dist-packages/Cryptodome   && \
-    apt-get -y --purge autoremove                                                           && \
-    rm -rf /var/lib/apt/lists/*
+# RUN sudo apt-get install python3-pip python3-cryptography build-essential python3-all-dev            \
+#                          python3-setuptools python3-wheel                && \
+#     pip install --break-system-packages pycryptodomex                                                               && \
+#     ln -s /usr/lib/python3/dist-packages/Crypto /usr/lib/python3/dist-packages/Cryptodome   && \
+#     apt-get -y --purge autoremove                                                           && \
+#     rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 9002 kodi && useradd -u 9002 -r -g kodi kodi && usermod -a -G video kodi
 
