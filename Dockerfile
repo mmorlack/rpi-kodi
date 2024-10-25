@@ -36,6 +36,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
 
+# FIX for Kodi post install -> see https://github.com/MichaIng/DietPi/issues/6703
+RUN mkdir -p /etc/polkit-1/localauthority/50-local.d
+
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
 #  - kodi-eventclients-kodi-send  allows us to shut down Kodi gracefully upon container termination
