@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM dtcooper/raspberrypi-os:python
+FROM dtcooper/raspberrypi-os:python-bullseye
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,9 +30,9 @@ RUN apt-get update && \
    apt-get -y dist-upgrade && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
-   apt-get install uuid-dev && \
+   apt-get install -y uuid-dev && \
    mkdir -p /etc/udev/rules.d && \
-   apt-get install sudo && \
+   apt-get install -y sudo && \
    rm -rf /var/lib/apt/lists/*                                           
 
 COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
