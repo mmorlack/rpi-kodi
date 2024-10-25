@@ -49,10 +49,11 @@ RUN apt-get update                                                        && \
 #  - pulseaudio                   in case the user prefers PulseAudio instead of ALSA
 #  - tzdata                       necessary for timezone selection
 RUN packages="                                               \
-    fbset                                                         \
+    fbset                                                    \
     ca-certificates                                          \
     mesa-*                                                   \
     kodi                                                     \
+    kodi-api-*                                               \
     kodi-eventclients-kodi-send                              \
     kodi-inputstream-adaptive                                \
     kodi-inputstream-rtmp                                    \
