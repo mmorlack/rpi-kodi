@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM dtcooper/raspberrypi-os:python-bullseye
+FROM dtcooper/raspberrypi-os:python
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -53,6 +53,8 @@ COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
 #  - tzdata                       necessary for timezone selection
 RUN packages="                                               \
     fbset                                                    \
+    kbd                                                      \
+    console-data \
     ca-certificates                                          \
     # mesa-*                                                   \
     kodi                                                     \
