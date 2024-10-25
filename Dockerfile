@@ -27,7 +27,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update                                                        && \
     apt-get -y purge openssl                                              && \
     apt-get -y --purge autoremove                                         && \
-    apt-get dist-upgrade                                                  && \
+    apt-get -y dist-upgrade                                               && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
     sudo apt-get install uuid-dev                                         
