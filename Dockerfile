@@ -24,17 +24,17 @@ FROM dtcooper/raspberrypi-os:python
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install the team-xbmc ppa
-RUN apt-get update                                                        && \
-    apt-get -y purge openssl                                              && \
-    apt-get -y --purge autoremove                                         && \
-    apt-get -y dist-upgrade                                               && \
+#RUN apt-get update                                                        && \
+#    apt-get -y purge openssl                                              && \
+#    apt-get -y --purge autoremove                                         && \
+#    apt-get -y dist-upgrade                                               && \
 # Bugfix for: installed kodi package post-installation script subprocess returned error exit status 1
 # either install udev or make the required directory 
-    apt-get install uuid-dev                                              && \
-    mkdir -p /etc/udev/rules.d
+#    apt-get install uuid-dev                                              && \
+#    mkdir -p /etc/udev/rules.d
 #    rm -rf /var/lib/apt/lists/*                                           
 
-# COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
+COPY 01-rpf-kodi /etc/apt/preferences.d/01-rpf-kodi
 
 # besides kodi, we will install a few extra packages:
 #  - ca-certificates              allows Kodi to properly establish HTTPS connections
@@ -53,33 +53,33 @@ RUN packages="                                               \
     fbset                                                    \
     ca-certificates                                          \
     mesa-*                                                   \
-    kodi21                                                   \
-    kodi21-inputstream-*                                     \
-    # kodi-api-*                                               \
-    # kodi-eventclients-kodi-send                              \
-    # kodi-peripheral-joystick                                 \
-    # kodi-pvr-argustv                                         \
-    # kodi-pvr-dvblink                                         \
-    # kodi-pvr-dvbviewer                                       \
-    # kodi-pvr-filmon                                          \
-    # kodi-pvr-hdhomerun                                       \
-    # kodi-pvr-hts                                             \
-    # kodi-pvr-iptvsimple                                      \
-    # kodi-pvr-mediaportal-tvserver                            \
-    # kodi-pvr-mythtv                                          \
-    # kodi-pvr-nextpvr                                         \
-    # kodi-pvr-njoy                                            \
-    # kodi-pvr-pctv                                            \
-    # kodi-pvr-sledovanitv-cz                                  \
-    # kodi-pvr-stalker                                         \
-    # kodi-pvr-teleboy                                         \
-    # kodi-pvr-vbox                                            \
-    # kodi-pvr-vdr-vnsi                                        \
-    # kodi-pvr-vuplus                                          \
-    # kodi-pvr-wmc                                             \
-    # kodi-pvr-zattoo                                          \
-    # kodi-screensaver-biogenesis                              \
-    # kodi-screensaver-pyro                                    \
+    kodi                                                   \
+    kodi-inputstream-*                                     \
+    kodi-api-*                                               \
+    kodi-eventclients-kodi-send                              \
+    kodi-peripheral-joystick                                 \
+    kodi-pvr-argustv                                         \
+    kodi-pvr-dvblink                                         \
+    kodi-pvr-dvbviewer                                       \
+    kodi-pvr-filmon                                          \
+    kodi-pvr-hdhomerun                                       \
+    kodi-pvr-hts                                             \
+    kodi-pvr-iptvsimple                                      \
+    kodi-pvr-mediaportal-tvserver                            \
+    kodi-pvr-mythtv                                          \
+    kodi-pvr-nextpvr                                         \
+    kodi-pvr-njoy                                            \
+    kodi-pvr-pctv                                            \
+    kodi-pvr-sledovanitv-cz                                  \
+    kodi-pvr-stalker                                         \
+    kodi-pvr-teleboy                                         \
+    kodi-pvr-vbox                                            \
+    kodi-pvr-vdr-vnsi                                        \
+    kodi-pvr-vuplus                                          \
+    kodi-pvr-wmc                                             \
+    kodi-pvr-zattoo                                          \
+    kodi-screensaver-biogenesis                              \
+    kodi-screensaver-pyro                                    \
     lirc                                                     \
     lirc-compat-remotes                                      \
     locales                                                  \
